@@ -13,7 +13,7 @@ app.get('/', function (req, res) {
       "Hola esta es mi pagina (Home)"
   )
 })
-
+//:params 
 app.get("/user/:username",(req,res,next)=>{
     console.log("el REquest",req)
     res.send(req.params)
@@ -24,7 +24,7 @@ app.get("/user/:username/:fullName",(req,res,next)=>{
     res.json(req.params)
 });
 
-/*users/Foggyrocket/Dylan_Torres 
+/* users/Foggyrocket/Dylan_Torres 
 *{
     username:"Foggyrocket",
     fullName:"Dylan_Torres"
@@ -32,6 +32,8 @@ app.get("/user/:username/:fullName",(req,res,next)=>{
 */
 
 app.get("/search",(req,res,next)=>{
+    // let {perro,dueno,mas} = req.query
+    // res.send(`mi Perro se llama ${perro}, y el dueño es ${dueno} y algo extra ${mas}`)
     res.json(req.query)
 })
 
@@ -45,7 +47,7 @@ app.post("/login",(req,res,next)=>{
         res.status(403).json({msg:"No es tu password Morr@"})
     }
     
-    res.json(req.body)
+    res.json({msg:"estas logueado perro"})
 });
 
 
@@ -70,6 +72,7 @@ app.get("/saludo/:isValid",sayHi,(req,res,next)=>{
 
 
 app.get("/beers",(req,res,next)=>{
+
     punkAPI.getRandom()
     .then(randomBeer=>{
         console.log("cerveza",randomBeer)
@@ -77,6 +80,21 @@ app.get("/beers",(req,res,next)=>{
     })
     .catch(err=>{
         console.log("este es el error",err)
-        res.status(400).json(err)})
+        res.status(400).json(err)
+    })
+
+})
+app.get("/beers/:id",(req,res,next)=>{
+    let {id} = req.params
+    punkAPI.getBeer(id)
+    .then(randomBeer=>{
+        console.log("cerveza",randomBeer)
+        res.json(randomBeer)
+    })
+    .catch(err=>{
+        console.log("este es el error",err)
+        res.status(400).json(err)
+    })
+
 })
 app.listen(3000, () => console.log('App listening on port 3000!'))
