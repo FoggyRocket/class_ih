@@ -2,6 +2,8 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const app     = express()
+const PunkAPIWrapper = require('punkapi-javascript-wrapper');
+const punkAPI = new PunkAPIWrapper();
 
 app.use(bodyParser.json())
 
@@ -46,4 +48,36 @@ app.post("/login",(req,res,next)=>{
     res.json(req.body)
 });
 
+
+//middleware
+
+function sayHi(req,res,next){
+    //mas valdaciiones 
+    if(req.params.isValid === "perro"){
+        console.log("Hola morrro 1")
+        next()
+    }else{
+        res.status(403).json({msg:"No es hay perrooo"})
+    }
+    
+}
+
+app.get("/saludo/:isValid",sayHi,(req,res,next)=>{
+    console.log("Hola morro 2 ")
+    res.send("Holaaaaaaa  entre")
+})
+
+
+
+app.get("/beers",(req,res,next)=>{
+    punkAPI.getRandom()
+    .then(randomBeer=>{
+        console.log("cerveza",randomBeer)
+        res.json(randomBeer)
+    })
+    .catch(err=>{
+        console.log("este es el error",err)
+        res.status(400).json(err)}
+        )
+})
 app.listen(3000, () => console.log('App listening on port 3000!'))
