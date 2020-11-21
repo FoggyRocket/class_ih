@@ -85,16 +85,20 @@ app.get("/beers",(req,res,next)=>{
 
 })
 app.get("/beers/:id",(req,res,next)=>{
-    let {id} = req.params
-    punkAPI.getBeer(id)
-    .then(randomBeer=>{
-        console.log("cerveza",randomBeer)
-        res.json(randomBeer)
+    punkAPI.getBeers()
+    .then(beers => {
+        console.log("asdl",beers)
+        let newBeers = beers.filter((item,i)=>{ 
+            let dateFilter = item.first_brewed.split('/') 
+            if(dateFilter[1]< 2010) {
+                return item
+            }
     })
-    .catch(err=>{
-        console.log("este es el error",err)
-        res.status(400).json(err)
+      res.status(200).json(newBeers);
     })
-
+    .catch(err => {
+      console.log(err);
+      res.status(400).json(err);
+    })
 })
 app.listen(3000, () => console.log('App listening on port 3000!'))
